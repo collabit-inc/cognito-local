@@ -6,7 +6,6 @@ import {
 import { v4 } from "uuid";
 import {
   InvalidParameterError,
-  InvalidPasswordError,
   NotAuthorizedError,
   PasswordResetRequiredError,
   UnsupportedError,
@@ -124,7 +123,8 @@ const verifyPasswordChallenge = async (
 const newPasswordChallenge = (user: User): InitiateAuthResponse => ({
   ChallengeName: "NEW_PASSWORD_REQUIRED",
   ChallengeParameters: {
-    USER_ID_FOR_SRP: user.Username,
+    USER_ID_FOR_SRP:
+      user.Attributes.find(({ Name }) => Name === "sub")?.Value ?? "",
     requiredAttributes: JSON.stringify([]),
     userAttributes: JSON.stringify(attributesToRecord(user.Attributes)),
   },
