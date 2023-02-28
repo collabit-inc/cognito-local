@@ -168,7 +168,7 @@ const userPasswordAuthFlow = async (
     });
   }
 
-  if (!user) {
+  if (!user || user.Password !== req.AuthParameters.PASSWORD) {
     throw new NotAuthorizedError();
   }
   if (user.UserStatus === "RESET_REQUIRED") {
@@ -176,9 +176,6 @@ const userPasswordAuthFlow = async (
   }
   if (user.UserStatus === "FORCE_CHANGE_PASSWORD") {
     return newPasswordChallenge(user);
-  }
-  if (user.Password !== req.AuthParameters.PASSWORD) {
-    throw new InvalidPasswordError();
   }
 
   if (
